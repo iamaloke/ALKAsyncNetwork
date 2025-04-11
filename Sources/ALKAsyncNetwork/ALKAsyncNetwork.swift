@@ -3,6 +3,13 @@
 
 import Foundation
 
+public enum RequestMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case del = "DELETE"
+}
+
 public enum ALKNetworkError: Error {
     case configMissing
     case invalidResponse
@@ -16,6 +23,8 @@ public protocol NetworkConfig {
 }
 
 public protocol Request {
+    var method: RequestMethod { get }
+    
     func make() -> URLRequest
 }
 
