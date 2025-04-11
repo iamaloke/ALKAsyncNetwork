@@ -30,27 +30,16 @@ public protocol Request {
 
 public protocol ALKNetwork {}
 
-public class ALKNetworkManager: ALKNetwork {
+public actor ALKNetworkManager: ALKNetwork {
     
     private var config: NetworkConfig?
-    
-    // Private serial queue to protect config
-    private let queue = DispatchQueue(label: "com.alk.network.queue")
     
     public init(config: NetworkConfig? = nil) {
         self.config = config
     }
     
-    private func getConfig() -> NetworkConfig? {
-        var result: NetworkConfig?
-        queue.sync {
-            result = self.config
-        }
-        return result
-    }
-    
     public func request<T: Decodable>(_ type: T.Type, request: Request) async throws -> T {
-        guard let config = getConfig() else {
+        guard let config = config else {
             throw ALKNetworkError.configMissing
         }
         
