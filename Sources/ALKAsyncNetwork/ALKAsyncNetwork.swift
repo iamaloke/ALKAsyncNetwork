@@ -24,6 +24,7 @@ public protocol NetworkConfig {
 
 public protocol Request {
     var method: RequestMethod { get }
+    var url: URL { get }
     
     func make() -> URLRequest
 }
