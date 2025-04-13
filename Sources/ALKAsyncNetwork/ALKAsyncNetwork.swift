@@ -62,4 +62,24 @@ public actor ALKNetworkManager: ALKNetwork {
         }
     }
     
+    public func download(request: Request) async throws -> Data {
+        guard let config = config else {
+            throw ALKNetworkError.configMissing
+        }
+        
+        let (data, response) = try await config
+            .session
+            .data(for: request.make())
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw ALKNetworkError.invalidResponse
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw ALKNetworkError.badResponse(statusCode: httpResponse.statusCode, data: data)
+        }
+        
+        return data
+    }
+    
 }
